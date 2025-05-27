@@ -1,8 +1,8 @@
-asgiref==3.5.0
-Django==4.0.2
-psycopg2-binary==2.9.3
-sqlparse==0.4.2
-tzdata==2021.5
-djangorestframework
-markdown
-django-filter
+Django==4.2.7
+djangorestframework==3.14.0
+django-filter==23.2
+markdown==3.4.4
+psycopg2-binary==2.9.9
+asgiref==3.7.2
+sqlparse==0.4.4
+tzdata==2024.1
