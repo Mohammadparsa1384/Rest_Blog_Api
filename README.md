@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Rest_Blog_Api
 =======
 <div align="center">
@@ -56,4 +56,4 @@ Don't forget to add the new package to requirements.txt for further use:
 ```bash
 docker-compose exec web pip freeze > requirements.txt
 ```
->>>>>>> bfd4479 (Initiall commit)
+
