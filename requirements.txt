@@ -6,3 +6,4 @@ psycopg2-binary==2.9.9
 asgiref==3.7.2
 sqlparse==0.4.4
 tzdata==2024.1
+Pillow==9.0.0
