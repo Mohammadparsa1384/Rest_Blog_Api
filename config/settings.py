@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third party apps
     'rest_framework',
+    'drf_spectacular',
     "crispy_forms",
     "crispy_bootstrap5",
     
@@ -143,3 +144,16 @@ LOGOUT_REDIRECT_URL = '/'
 # Crispy config
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# rest framework settings
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Rest Blog Api',
+    'DESCRIPTION': 'Documented API using drf-spectacular',
+    'VERSION': '1.0.0',
+}
