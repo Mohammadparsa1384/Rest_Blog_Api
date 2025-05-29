@@ -13,3 +13,21 @@ services:
     image: postgres:16
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
+  
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    container_name: smtp4dev-container 
+    restart: always
+    ports:
+        - '5000:80'
+        - '25:25'
+        - '143:143'
+
+    volumes:
+      - smtp4dev-data:/smtp4dev
+    environment:
+      - ServerOptions__Urls=http://*:80
+      - ServerOptions__HostName=smtp4dev
+
+volumes:
+  smtp4dev-data:

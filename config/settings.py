@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     "crispy_forms",
     "crispy_bootstrap5",
+    'mail_templated',
     
     # local apps
     'accounts.apps.AccountsConfig',
@@ -148,7 +149,13 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # rest framework settings
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    
 }
 
 
@@ -157,3 +164,12 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Documented API using drf-spectacular',
     'VERSION': '1.0.0',
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp4dev'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = 'no-reply@example.com'
