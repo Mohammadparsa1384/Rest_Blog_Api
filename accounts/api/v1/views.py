@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404
-from accounts.models import CustomUser, Profile
+from django.urls import reverse
+from accounts.models import  Profile
 from ..utils import EmailThread
-from .serilaizers import ProfileSerializer, RegistertionSerializer ,CustomTokenObtainPairSerializer
+from .serilaizers import ActivationResendSerializer, ProfileSerializer, RegistertionSerializer ,CustomTokenObtainPairSerializer
 from mail_templated import EmailMessage
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -11,7 +12,10 @@ import jwt
 from jwt.exceptions import ExpiredSignatureError , InvalidSignatureError
 from rest_framework.response import Response
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from rest_framework import status
+
+User = get_user_model()
 
 class RegisterationAPIView(generics.CreateAPIView):
     '''API view for registering a new user account.'''
@@ -24,10 +28,17 @@ class RegisterationAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = self.perform_create(serializer)
+        
+        if user.is_verified:
+            return Response({{'detail': 'User is already activated.'}}, status=status.HTTP_400_BAD_REQUEST)
+        
         token = self.get_tokens_for_user(user)
         
+        relative_url = reverse("accounts:api-v1:activation")
+        activation_url = self.request.build_absolute_uri(f"{relative_url}?token={token}")
+        
         email_obj = EmailMessage('email/activation_email.tpl',
-                                 {'token': token, 'user': user},
+                                 {'token': token, 'user': user, 'activation_url':activation_url},
                                  'admin@gmail.com',
                                  [user.email]
         )
@@ -59,7 +70,7 @@ class ActivationApiView(generics.GenericAPIView):
         except Exception:
             return Response({'detail':'Token is invalid'}, status=status.HTTP_400_BAD_REQUEST)
         
-        user_obj = get_object_or_404(CustomUser, pk=user_id)
+        user_obj = get_object_or_404(User, pk=user_id)
         
         if user_obj.is_verified:
             return Response({'detail':'Your account has already been verified'}, status=status.HTTP_400_BAD_REQUEST)
@@ -67,6 +78,43 @@ class ActivationApiView(generics.GenericAPIView):
         user_obj.is_verified = True
         user_obj.save()
         return Response({'detail':'Your account has been verified successfully'}, status=status.HTTP_200_OK)
+
+
+from django.conf import settings
+
+class ActivationResendApiView(generics.GenericAPIView):
+    serializer_class = ActivationResendSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user_obj = serializer.get_user()
+
+        # Generate JWT token
+        token = self.get_tokens_for_user(user_obj)
+
+        # Build full activation URL
+        base_url = getattr(settings, "BASE_URL", "http://127.0.0.1:8000")
+        activation_url = f"{base_url}/accounts/api/v1/activation/confirm/?token={token}"
+
+        # Prepare and send email with activation URL and user context
+        email_obj = EmailMessage(
+            'email/activation_email.tpl',
+            {'activation_url': activation_url, 'user': user_obj},
+            'admin@gmail.com',
+            to=[user_obj.email]
+        )
+        EmailThread(email_obj).start()
+
+        return Response(
+            {'detail': 'Activation email resent successfully.'},
+            status=status.HTTP_200_OK
+        )
+
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
+
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     '''Custom jwt Token view '''
