@@ -2,7 +2,14 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from accounts.models import  Profile
 from ..utils import EmailThread
-from .serilaizers import (ActivationResendSerializer, ProfileSerializer, RegistertionSerializer , PasswordChangeSerializer , CustomTokenObtainPairSerializer)
+from .serilaizers import (ActivationResendSerializer, 
+                          ProfileSerializer, 
+                          RegistertionSerializer , 
+                          PasswordChangeSerializer , 
+                          CustomTokenObtainPairSerializer, 
+                          PasswordResetRequestSerializer,
+                          PasswordResetConfirmSerializer)
+
 from mail_templated import EmailMessage
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -117,7 +124,7 @@ class ActivationResendApiView(generics.GenericAPIView):
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
-    '''Custom jwt Token view '''
+    '''Custom JWT token view for handling user authentication'''
     serializer_class = CustomTokenObtainPairSerializer
 
 class ProfileApiView(generics.RetrieveUpdateAPIView):
@@ -130,6 +137,7 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
         return profile
 
 class PasswordChangeApiView(generics.GenericAPIView):
+    ''' API view to allow authenticated users to change their password.'''
     model = User
     serializer_class = PasswordChangeSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -144,17 +152,63 @@ class PasswordChangeApiView(generics.GenericAPIView):
         if serializer.is_valid():
             user = self.get_object()
             
-            # Check if the old password matches the current password
             if not user.check_password(serializer.validated_data.get("old_password")):
                 return Response({"old_password": ["Incorrect old password."]}, status=status.HTTP_400_BAD_REQUEST)
             
-            # Update password
             user.set_password(serializer.validated_data.get("new_password"))
             user.save()
             
             return Response({"details":"Password changed successfully."}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         
+class PasswordResetRequestApiView(generics.GenericAPIView):
+    '''API view to request a password reset via email.'''
+    serializer_class = PasswordResetRequestSerializer
+    
+    def post(self,request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception = True)
+        
+        user = User.objects.get(email=serializer.validated_data['email'])
+        token = self.get_tokens_for_user(user)
+        
+        relative_url = reverse("accounts:api-v1:password-reset-confirm", kwargs={"token": token})
+        reset_url = self.request.build_absolute_uri(relative_url)
+        
+        email = EmailMessage(
+            'email/password_reset_email.tpl',
+            {'user': user, 'reset_url': reset_url},
+            'admin@gmail.com',
+            to=[user.email]
+        )
+        email.subject = "Password Reset Request"
+        EmailThread(email).start()
+        
+        return Response({'detail': 'Password reset email has been sent.'}, status=status.HTTP_200_OK)
+    
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
+
+class PasswordResetConfirmView(generics.GenericAPIView):
+    '''API view to confirm password reset using a token.'''
+    serializer_class = PasswordResetConfirmSerializer
+    
+    def post(self, request, token,*args, **kwargs):
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            user = User.objects.get(id=payload['user_id'])
             
+        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError , jwt.DecodeError, User.DoesNotExist):
+            return Response({"detail": "Invalid or expired token."}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(data=request.data)
         
+        if serializer.is_valid():
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            return Response({"detail": "Password has been reset successfully."}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

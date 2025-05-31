@@ -3,7 +3,7 @@
 {% block subject %}Activate Your Account{% endblock %}
 
 {% block html %}
-Hello {{ user.username }},
+Hello {{ user.email }},
 
 Please activate your account by clicking the link below:
 

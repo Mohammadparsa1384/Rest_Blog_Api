@@ -86,6 +86,26 @@ class PasswordChangeSerializer(serializers.Serializer):
             validate_password(attrs.get("new_password"))
         except ValidationError as e:
             raise serializers.ValidationError({'new_password':list(e.messages)})
-        
         return attrs
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, email):
+        if not User.objects.filter(email=email).exists():
+            raise ValidationError("No user is associated with this email address.")
+        return email
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    new_password = serializers.CharField(required=True , write_only=True)
+    confirm_password = serializers.CharField(required=True , write_only=True)
     
+    def validate_new_password(self, value):
+        validate_password(value)
+        return value
+    
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['confirm_password']:
+            raise serializers.ValidationError({"detail":"password doesn't match"})
+        return attrs
