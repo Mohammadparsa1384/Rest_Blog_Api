@@ -10,9 +10,12 @@ urlpatterns = [
     
     # activation
     path("activation/confirm/", views.ActivationApiView.as_view(), name="activation"),
-    
     # resend activation
     path("activation/resend/", views.ActivationResendApiView.as_view(), name="resend-activation"),
+    
+    # change password
+    path("change-password/", views.PasswordChangeApiView.as_view() , name="change-password"),
+    
     
     # login jwt
     path("jwt/create/", views.CustomTokenObtainPairView.as_view(), name="jwt-create"),

@@ -73,3 +73,19 @@ class ActivationResendSerializer(serializers.Serializer):
     
     def get_user(self):
         return self.validated_data.get('user_obj')
+
+class PasswordChangeSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True, write_only=True)
+    new_password = serializers.CharField(required=True, write_only=True)
+    confirm_password = serializers.CharField(required=True, write_only=True)
+    
+    def validate(self, attrs):
+        if attrs.get("new_password") != attrs.get("confirm_password"):
+            raise serializers.ValidationError({"detail":"password doesn't match"})
+        try:
+            validate_password(attrs.get("new_password"))
+        except ValidationError as e:
+            raise serializers.ValidationError({'new_password':list(e.messages)})
+        
+        return attrs
+    

@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from accounts.models import  Profile
 from ..utils import EmailThread
-from .serilaizers import ActivationResendSerializer, ProfileSerializer, RegistertionSerializer ,CustomTokenObtainPairSerializer
+from .serilaizers import (ActivationResendSerializer, ProfileSerializer, RegistertionSerializer , PasswordChangeSerializer , CustomTokenObtainPairSerializer)
 from mail_templated import EmailMessage
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -121,9 +121,40 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 class ProfileApiView(generics.RetrieveUpdateAPIView):
+    '''API view to retrieve and update the authenticated user's profile.'''
     serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     
     def get_object(self):
         profile = Profile.objects.get(user=self.request.user)
         return profile
+
+class PasswordChangeApiView(generics.GenericAPIView):
+    model = User
+    serializer_class = PasswordChangeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_object(self):
+        obj = self.request.user
+        return obj 
+     
+    def put(self , requset):
+        serializer = self.get_serializer(data = requset.data)
+        
+        if serializer.is_valid():
+            user = self.get_object()
+            
+            # Check if the old password matches the current password
+            if not user.check_password(serializer.validated_data.get("old_password")):
+                return Response({"old_password": ["Incorrect old password."]}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update password
+            user.set_password(serializer.validated_data.get("new_password"))
+            user.save()
+            
+            return Response({"details":"Password changed successfully."}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+            
+        
