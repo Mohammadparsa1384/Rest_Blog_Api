@@ -2,6 +2,11 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, Profile
 
+admin.site.site_title = "Rest blog admin panel"
+admin.site.site_header = "Rest blog admin panel"
+admin.site.site_title = "Rest blog admin panel"
+admin.site.index_title = "Admin panel"
+
 # Register your models here.
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
