@@ -41,7 +41,7 @@ class RegisterationAPIView(generics.CreateAPIView):
         
         token = self.get_tokens_for_user(user)
         
-        relative_url = reverse("accounts:api-v1:activation")
+        relative_url = reverse("accounts:api-v1:activation", kwargs={"token": token})
         activation_url = self.request.build_absolute_uri(f"{relative_url}?token={token}")
         
         email_obj = EmailMessage('email/activation_email.tpl',
