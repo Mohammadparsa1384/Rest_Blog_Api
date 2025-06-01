@@ -16,7 +16,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import permissions
 import jwt
-from jwt.exceptions import ExpiredSignatureError , InvalidSignatureError
+from jwt.exceptions import ExpiredSignatureError , InvalidSignatureError ,DecodeError
 from rest_framework.response import Response
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -62,33 +62,31 @@ class RegisterationAPIView(generics.CreateAPIView):
         return str(refresh.access_token)
     
 class ActivationApiView(generics.GenericAPIView):
-    def get(self, request, *args, **kwargs):
-        token = request.query_params.get('token')
-        if not token:
-            return Response({'detail': 'Token parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
-        
+    def get(self, requset, token ,*args, **kwargs):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
             user_id = payload.get("user_id")
         except ExpiredSignatureError:
-            return Response({'detail':'Token has expired'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"detail": "Activation link has expired."}, status=status.HTTP_401_UNAUTHORIZED)
+        
         except InvalidSignatureError:
-            return Response({'detail':'Token is invalid'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'detail':'token is not valid'})
+        
+        except DecodeError:
+            return Response({"detail": "Token is malformed or invalid."}, status=status.HTTP_400_BAD_REQUEST)
+        
         except Exception:
-            return Response({'detail':'Token is invalid'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        user_obj = get_object_or_404(User, pk=user_id)
-        
-        if user_obj.is_verified:
-            return Response({'detail':'Your account has already been verified'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        user_obj.is_verified = True
-        user_obj.save()
-        return Response({'detail':'Your account has been verified successfully'}, status=status.HTTP_200_OK)
+            return Response({"detail": "Something went wrong while decoding token."}, status=status.HTTP_400_BAD_REQUEST)
 
-
-from django.conf import settings
-
+        user = get_object_or_404(User, id=user_id)
+        
+        if user.is_verified:
+            return Response({"detail": "Account already verified."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user.is_verified = True
+        user.save()
+        return Response({"detail": "Your account has been successfully verified."}, status=status.HTTP_200_OK)
+    
 class ActivationResendApiView(generics.GenericAPIView):
     serializer_class = ActivationResendSerializer
 
