@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     
     # local apps
     'accounts.apps.AccountsConfig',
+    'blog.apps.BlogConfig',
 ]
 
 MIDDLEWARE = [
