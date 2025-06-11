@@ -39,11 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third party apps
+    'django_cleanup.apps.CleanupConfig',
     'rest_framework',
     'drf_spectacular',
     "crispy_forms",
     "crispy_bootstrap5",
     'mail_templated',
+    
     
     # local apps
     'accounts.apps.AccountsConfig',
