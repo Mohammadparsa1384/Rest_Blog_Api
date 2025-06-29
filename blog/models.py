@@ -32,8 +32,8 @@ class Post(models.Model):
         return self.title
 
 class Category(models.Model):
-    title = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True)
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(blank=True)
     
     class Meta:
         verbose_name = "category"
@@ -49,8 +49,8 @@ class Category(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    slug = models.SlugField(unique=True, blank=True)
+    name = models.CharField(max_length=50)
+    slug = models.SlugField(blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
