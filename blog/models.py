@@ -59,3 +59,16 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+class Comment(models.Model):
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')  # پست مربوط به این کامنت
+    author = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)  # نویسنده‌ی کامنت
+    content = models.TextField()
+    created_date = models.DateTimeField(auto_now_add=True)  
+    is_approved = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['-created_date'] 
+    
+    def __str__(self):
+        return f'Comment by {self.author} on {self.post}'
