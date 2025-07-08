@@ -6,12 +6,15 @@ from .permissions import IsAuthorOrAdminOrReadOnly
 from rest_framework.response import  Response
 from rest_framework import status
 from rest_framework.decorators import action
+from django_filters.rest_framework import DjangoFilterBackend
 
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all().select_related("category").prefetch_related("tags")
     serializer_class = PostSerializer
     lookup_field = "slug"
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrAdminOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['status']
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -35,6 +38,8 @@ class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.filter(is_approved=True)
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrAdminOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['post', 'author', 'is_approved']
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -46,8 +51,9 @@ class CommentViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return Comment.objects.all() 
+            return Comment.objects.all()
         return Comment.objects.filter(is_approved=True)
+        
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
     def approve(self, request, pk=None):
