@@ -7,6 +7,7 @@ from rest_framework.response import  Response
 from rest_framework import status
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Q
 
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all().select_related("category").prefetch_related("tags")
@@ -15,6 +16,20 @@ class PostViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['status']
+    
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_staff:
+            return Post.objects.all()
+
+        if user.is_authenticated:
+            return Post.objects.filter(
+                Q(status="published") | Q(author=user.profile)
+            )
+
+        return Post.objects.filter(status="published")
+
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
