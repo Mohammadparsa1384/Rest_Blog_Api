@@ -28,9 +28,9 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('post', 'author', 'created_date', 'is_approved')
+    list_display = ('post', 'content','author', 'created_date', 'is_approved')
     list_filter = ('is_approved', 'created_date') 
-    search_fields = ('author__user__username', 'content', 'post__title')  # Searchable fields
+    search_fields = ('author__user__email', 'content', 'post__title')  # Searchable fields
     actions = ['approve_comments']  # Custom admin action
     
     @admin.action(description="Approve selected comments")

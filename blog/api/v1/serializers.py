@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from accounts.models import Profile
-from ...models import (Category, Post, Tag)
+from ...models import (Category, Post, Tag, Comment)
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -75,3 +75,11 @@ class PostSerializer(serializers.ModelSerializer):
             validated_data['category'] = category
         
         return super().create(validated_data)
+
+class CommentSerializer(serializers.ModelSerializer):
+    author_email = serializers.CharField(source= 'author.user.email', read_only = True)
+    post_title = serializers.CharField(source='post.title', read_only = True)
+    class Meta:
+        model = Comment
+        fields = ["id", "post", "post_title" , "content", "author_email","created_date", "is_approved"]
+        read_only_fields = ["id", "created_date", "is_approved", "author_email", "post_title"]
