@@ -1,10 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
 from ...models import Category, Post ,Tag ,  Comment
 from .serializers import (PostSerializer, CategorySerialzer, TagSerializer, CommentSerializer)
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from .permissions import IsAuthorOrAdminOrReadOnly
 from rest_framework.response import  Response
 from rest_framework import status
+from rest_framework.decorators import action
 
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all().select_related("category").prefetch_related("tags")
@@ -47,4 +48,10 @@ class CommentViewSet(ModelViewSet):
         if self.request.user.is_staff:
             return Comment.objects.all() 
         return Comment.objects.filter(is_approved=True)
-    
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
+    def approve(self, request, pk=None):
+        comment = self.get_object()
+        comment.is_approved = True
+        comment.save()
+        return Response({'detail':'Comment approved'})
