@@ -10,6 +10,17 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
 
 class PostViewSet(ModelViewSet):
+    """
+    ViewSet for managing blog posts.    
+    Provides full CRUD functionality.
+    
+    Access:
+    - Admins: full access.
+    - Authenticated users: can create posts and see their own drafts.
+    - Anonymous users: can only view published posts.
+
+    Supports filtering by status and includes custom logic for visibility of draft posts.
+    """
     queryset = Post.objects.all().select_related("category").prefetch_related("tags")
     serializer_class = PostSerializer
     lookup_field = "slug"
@@ -40,16 +51,41 @@ class PostViewSet(ModelViewSet):
         serializer.save(author=self.request.user.profile)
 
 class CategoryViewSet(ModelViewSet):
+    """
+    ViewSet for managing post categories.
+
+    Provides CRUD operations for blog post categories.
+    Accessible by any user. Lookup is based on category slug.
+    """
     queryset = Category.objects.all()
     serializer_class = CategorySerialzer
     lookup_field = "slug"
 
 class TagViewSet(ModelViewSet):
+    """
+    ViewSet for managing post tags.
+
+    Supports CRUD operations for tagging blog posts.
+    Accessible by any user. Lookup is based on tag slug.
+    """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     lookup_field = "slug"
 
 class CommentViewSet(ModelViewSet):
+    """
+    ViewSet for managing comments on blog posts.
+
+    Features:
+    - Only approved comments are visible by default.
+    - Admins can see all comments.
+    - Authenticated users can create comments.
+    - Includes a custom 'approve' action (for admins only).
+    - Supports filtering by post, author, and approval status.
+
+    Custom delete response is also implemented.
+    """
+
     queryset = Comment.objects.filter(is_approved=True)
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrAdminOrReadOnly]

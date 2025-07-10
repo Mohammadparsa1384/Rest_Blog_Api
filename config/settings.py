@@ -162,6 +162,11 @@ REST_FRAMEWORK = {
     ),
     
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'blog.api.v1.pagination.CustomPagination',
+    
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
 
     
 }
