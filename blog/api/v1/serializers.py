@@ -25,16 +25,17 @@ class CategorySerialzer(serializers.ModelSerializer):
             }
         }
 
-class TagSerializer(serializers.ModelSerializer):
+class TagSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tag
-        fields = ["name", "slug"]
-        extra_kwargs= {
-            "url" : {
-                "view_name" : "blog:api-v1:tag-detail",
+        fields = ["name", "slug", "url"]
+        extra_kwargs = {
+            "url": {
+                "view_name": "blog:api-v1:tag-detail",
                 "lookup_field": "slug"
             }
         }
+
 
 class PostSerializer(serializers.ModelSerializer):
     author = serializers.EmailField(source='author.user.email', read_only=True)
