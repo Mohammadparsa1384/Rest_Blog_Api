@@ -7,6 +7,7 @@ from rest_framework.response import  Response
 from rest_framework import status
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from django.db.models import Q
 
 class PostViewSet(ModelViewSet):
@@ -25,8 +26,9 @@ class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
     lookup_field = "slug"
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrAdminOrReadOnly]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend , SearchFilter]
     filterset_fields = ['status']
+    search_fields = ['title', 'content', 'author__user__email']
     
     def get_queryset(self):
         user = self.request.user
