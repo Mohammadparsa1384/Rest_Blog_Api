@@ -59,7 +59,7 @@ class CategoryViewSet(ModelViewSet):
     Provides CRUD operations for blog post categories.
     Accessible by any user. Lookup is based on category slug.
     """
-    queryset = Category.objects.all()
+    queryset = Category.objects.all().order_by("id")
     serializer_class = CategorySerialzer
     lookup_field = "slug"
 
@@ -70,7 +70,7 @@ class TagViewSet(ModelViewSet):
     Supports CRUD operations for tagging blog posts.
     Accessible by any user. Lookup is based on tag slug.
     """
-    queryset = Tag.objects.all()
+    queryset = Tag.objects.all().order_by("id")
     serializer_class = TagSerializer
     lookup_field = "slug"
 
@@ -103,8 +103,13 @@ class CommentViewSet(ModelViewSet):
         serializer.save(author=self.request.user.profile)
 
     def get_queryset(self):
-        if self.request.user.is_staff:
+        user = self.request.user
+        if user.is_staff:
             return Comment.objects.all()
+        elif user.is_authenticated:
+            return Comment.objects.filter(
+                Q(is_approved=True) | Q(author=user.profile)
+            )
         return Comment.objects.filter(is_approved=True)
         
 
