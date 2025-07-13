@@ -2,7 +2,8 @@ import pytest
 from django.contrib.auth import get_user_model
 from accounts.models import Profile
 from blog.models import (Category, Post, Tag, Comment)
-from rest_framework.test import APIClient
+from rest_framework.test import APIClient , APIRequestFactory
+from ..permissions import IsAuthorOrAdminOrReadOnly
 
 @pytest.fixture
 def user_factory(db):
@@ -110,3 +111,27 @@ def comment_by_user(profile_factory, post):
 @pytest.fixture
 def admin_user(django_user_model):
     return django_user_model.objects.create_superuser(email="admin@example.com", password="admin123")
+
+
+@pytest.fixture
+def permission():
+    return IsAuthorOrAdminOrReadOnly()
+
+@pytest.fixture
+def factory():
+    return APIRequestFactory()
+
+@pytest.fixture
+def bulk_posts(profile_factory, category):
+    author = profile_factory(email="pagetest@example.com")
+    return [
+        Post.objects.create(
+            title=f"Post {i}",
+            slug=f"post-{i}",
+            content="Test content",
+            status="published",
+            category=category,
+            author=author
+        )
+        for i in range(15)
+    ]
