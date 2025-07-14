@@ -33,7 +33,7 @@
     <li>Access the application:
       <ul>
         <li><strong>API root</strong>: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
-        <li><strong>Swagger UI</strong>: <a href="http://127.0.0.1:8000/api/schema/swagger-ui/" target="_blank">http://127.0.0.1:8000/api/schema/swagger-ui/</a></li>
+        <li><strong>Swagger UI</strong>: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
         <li><strong>SMTP4Dev</strong>: <a href="http://127.0.0.1:5000" target="_blank">http://127.0.0.1:5000</a></li>
       </ul>
     </li>
