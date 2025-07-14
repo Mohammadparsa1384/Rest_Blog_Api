@@ -1,9 +1,5 @@
 from django.contrib import admin
-<<<<<<< HEAD
-from .models import Post, Category, Tag
-=======
 from .models import (Post, Category, Tag, Comment)
->>>>>>> main
 
 # Register yourm models here
 @admin.register(Post)
@@ -30,8 +26,6 @@ class TagAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name',)
 
-<<<<<<< HEAD
-=======
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('post', 'content','author', 'created_date', 'is_approved')
@@ -42,4 +36,3 @@ class CommentAdmin(admin.ModelAdmin):
     @admin.action(description="Approve selected comments")
     def approve_comments(self, request, queryset):
         queryset.update(is_approved=True)
->>>>>>> main

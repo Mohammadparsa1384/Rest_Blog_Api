@@ -17,10 +17,7 @@ urlpatterns = [
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
         
     path("accounts/", include('accounts.urls')),
-<<<<<<< HEAD
-=======
     path("blog/", include("blog.urls")),
->>>>>>> main
 ]
 if settings.DEBUG:
      urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
