@@ -15,24 +15,31 @@
     </ul>
   </div>
 
-  <div class="section">
-    <h2>🚀 How to Run</h2>
-    <ol>
-      <li>Clone the repo</li>
-      <li>Build containers:
-        <pre><code>docker-compose build</code></pre>
-      </li>
-      <li>Run containers:
-        <pre><code>docker-compose up</code></pre>
-      </li>
-      <li>Access:
-        <ul>
-          <li>API: <code>http://127.0.0.1:8000</code></li>
-          <li>SMTP4Dev: <code>http://127.0.0.1:5000</code></li>
-        </ul>
-      </li>
-    </ol>
-  </div>
+<div class="section">
+  <h2>🚀 How to Run</h2>
+  <ol>
+    <li>Clone the repository:
+      <pre><code>git clone https://github.com/Mohammadparsa1384/Rest_Blog_Api.git</code></pre>
+    </li>
+    <li>Navigate to the project directory:
+      <pre><code>cd Rest_Blog_Api</code></pre>
+    </li>
+    <li>Build the Docker containers:
+      <pre><code>docker-compose build .</code></pre>
+    </li>
+    <li>Start the containers:
+      <pre><code>docker-compose up</code></pre>
+    </li>
+    <li>Access the application:
+      <ul>
+        <li><strong>API root</strong>: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+        <li><strong>Swagger UI</strong>: <a href="http://127.0.0.1:8000/api/schema/swagger-ui/" target="_blank">http://127.0.0.1:8000/api/schema/swagger-ui/</a></li>
+        <li><strong>SMTP4Dev</strong>: <a href="http://127.0.0.1:5000" target="_blank">http://127.0.0.1:5000</a></li>
+      </ul>
+    </li>
+  </ol>
+</div>
+
 
   <div class="section">
     <h2>🔐 Authentication Endpoints (Accounts App)</h2>
