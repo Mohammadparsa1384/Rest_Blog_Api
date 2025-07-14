@@ -9,7 +9,8 @@ from drf_spectacular.views import (
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),\
+    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
+    path('admin-panel-VcZ712sR/', admin.site.urls),
     
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
