@@ -2,9 +2,14 @@ asgiref==3.7.2
 attrs==25.3.0
 crispy-bootstrap5==2025.4
 Django==4.2.7
+<<<<<<< HEAD
+=======
+django-admin-honeypot-updated-2021==1.2.0
+>>>>>>> main
 django-cleanup==9.0.0
 django-crispy-forms==2.4
 django-filter==23.2
+django-ipware==7.0.1
 django-mail-templated==2.6.5
 djangorestframework==3.14.0
 djangorestframework_simplejwt==5.5.0
@@ -21,6 +26,10 @@ psycopg2-binary==2.9.9
 PyJWT==2.9.0
 pytest==8.3.5
 pytest-django==4.11.1
+<<<<<<< HEAD
+=======
+python-ipware==3.0.0
+>>>>>>> main
 pytz==2025.2
 PyYAML==6.0.2
 referencing==0.36.2

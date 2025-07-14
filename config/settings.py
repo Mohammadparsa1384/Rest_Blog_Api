@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     'mail_templated',
+    'admin_honeypot',
+    
     
     
     # local apps
@@ -123,9 +125,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -162,10 +164,19 @@ REST_FRAMEWORK = {
     ),
     
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'blog.api.v1.pagination.CustomPagination',
+    
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
 
     
 }
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7), 
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+}
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Rest Blog Api',

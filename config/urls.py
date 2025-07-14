@@ -9,13 +9,18 @@ from drf_spectacular.views import (
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),\
+    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
+    path('admin-panel-VcZ712sR/', admin.site.urls),
     
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
         
     path("accounts/", include('accounts.urls')),
+<<<<<<< HEAD
+=======
+    path("blog/", include("blog.urls")),
+>>>>>>> main
 ]
 if settings.DEBUG:
      urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

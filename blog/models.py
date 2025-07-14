@@ -32,8 +32,13 @@ class Post(models.Model):
         return self.title
 
 class Category(models.Model):
+<<<<<<< HEAD
     title = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True, blank=True)
+=======
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(blank=True)
+>>>>>>> main
     
     class Meta:
         verbose_name = "category"
@@ -49,8 +54,13 @@ class Category(models.Model):
 
 
 class Tag(models.Model):
+<<<<<<< HEAD
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True, blank=True)
+=======
+    name = models.CharField(max_length=50)
+    slug = models.SlugField(blank=True)
+>>>>>>> main
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -58,4 +68,21 @@ class Tag(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
+<<<<<<< HEAD
         return self.name
+=======
+        return self.name
+
+class Comment(models.Model):
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)  
+    content = models.TextField()
+    created_date = models.DateTimeField(auto_now_add=True)  
+    is_approved = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['-created_date'] 
+    
+    def __str__(self):
+        return f'{self.content[:12]}'
+>>>>>>> main
