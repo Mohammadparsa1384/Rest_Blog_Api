@@ -1,38 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Rest Blog API - README</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.7;
-      margin: 2rem;
-      background-color: #f9f9f9;
-      color: #333;
-    }
-    h1, h2, h3 {
-      color: #2c3e50;
-    }
-    code {
-      background: #eee;
-      padding: 2px 4px;
-      border-radius: 4px;
-      font-family: monospace;
-    }
-    ul {
-      list-style-type: disc;
-      margin-left: 2rem;
-    }
-    .section {
-      background-color: #fff;
-      padding: 1rem 2rem;
-      margin-bottom: 2rem;
-      border-left: 5px solid #3498db;
-      box-shadow: 0 0 5px rgba(0,0,0,0.05);
-    }
-  </style>
-</head>
+
 <body>
 
   <h1>📘 Rest Blog API - Django Project</h1>
