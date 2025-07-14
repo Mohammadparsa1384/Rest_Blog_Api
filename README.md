@@ -77,7 +77,7 @@
     <h2>📦 Admin Panel</h2>
     <ul>
       <li>Fake admin for honeypot: <code>/admin/</code></li>
-      <li>Real admin path is secret – hidden for security</li>
+      <li>Real admin path is /admin-panel-VcZ712sR/ for security</li>
     </ul>
   </div>
 
