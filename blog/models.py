@@ -32,8 +32,13 @@ class Post(models.Model):
         return self.title
 
 class Category(models.Model):
+<<<<<<< HEAD
+    title = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+=======
     title = models.CharField(max_length=100)
     slug = models.SlugField(blank=True)
+>>>>>>> main
     
     class Meta:
         verbose_name = "category"
@@ -49,8 +54,13 @@ class Category(models.Model):
 
 
 class Tag(models.Model):
+<<<<<<< HEAD
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+=======
     name = models.CharField(max_length=50)
     slug = models.SlugField(blank=True)
+>>>>>>> main
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -58,6 +68,9 @@ class Tag(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
+<<<<<<< HEAD
+        return self.name
+=======
         return self.name
 
 class Comment(models.Model):
@@ -72,3 +85,4 @@ class Comment(models.Model):
     
     def __str__(self):
         return f'{self.content[:12]}'
+>>>>>>> main

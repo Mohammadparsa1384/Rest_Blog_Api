@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'admin_honeypot',
     
     
+    
     # local apps
     'accounts.apps.AccountsConfig',
     'blog.apps.BlogConfig',
