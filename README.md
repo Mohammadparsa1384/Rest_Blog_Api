@@ -63,7 +63,7 @@
   <div class="section">
     <h2>📚 Swagger UI</h2>
     <p>You can access full API documentation via Swagger at:</p>
-    <p><code>http://127.0.0.1:8000/api/schema/swagger-ui/</code></p>
+    <p><code>http://127.0.0.1:8000/</code></p>
   </div>
 
   <div class="section">
