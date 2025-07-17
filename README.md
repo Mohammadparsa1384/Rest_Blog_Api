@@ -62,6 +62,7 @@
       <li><code>GET/POST /blog/api/v1/comments/</code> – Manage comments</li>
       <li><code>POST /blog/api/v1/comments/&lt;id&gt;/approve/</code> – Approve comment</li>
       <li><code>GET/POST /blog/api/v1/category/</code> – Manage categories</li>
+      <li><code>GET/POST /blog/api/v1/tags/</code> – Manage tags</li>
     </ul>
   </div>
 
