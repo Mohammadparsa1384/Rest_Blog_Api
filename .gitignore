@@ -2,3 +2,5 @@ venv/
 db.sqlite3
 .idea/
 media/
+liara_nginx.conf
+liara.json
